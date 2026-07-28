@@ -99,6 +99,8 @@ export interface Settings {
   show_other_domains_apps: 0 | 1
   portal_user_intro: string
   portal_public_intro: string
+  portal_show_gemini_tile?: boolean
+  portal_show_userweb_tile?: boolean
   apps: AppsSettings
 }
 

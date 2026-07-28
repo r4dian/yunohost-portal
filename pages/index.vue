@@ -6,6 +6,7 @@ definePageMeta({
 const { t, locale } = useI18n()
 const isLoggedIn = await useIsLoggedIn()
 const settings = await useSettings()
+const user = await useUser()
 const appsData = await useApps()
 
 useHead({
@@ -19,6 +20,28 @@ const intro = computed(() => {
     public: isPublic,
   } = settings.value
   return isLoggedIn.value ? userIntro : isPublic ? publicIntro : null
+})
+
+const specialTiles = computed(() => {
+  const tiles: { label: string; url: string; icon: string }[] = []
+
+  if (settings.value.portal_show_gemini_tile) {
+    tiles.push({
+      label: 'Gemini',
+      url: `gemini://${settings.value.domain}`,
+      icon: 'earth',
+    })
+  }
+
+  if (settings.value.portal_show_userweb_tile && isLoggedIn.value && user.value) {
+    tiles.push({
+      label: t('user_web'),
+      url: `http://${settings.value.domain}/~${user.value.username}`,
+      icon: 'home',
+    })
+  }
+
+  return tiles
 })
 
 const apps = Object.values(appsData.value).map((app) => {
@@ -96,6 +119,20 @@ const tileClasses = computed(() => {
         </button>
       </div>
     </form>
+
+    <section v-if="specialTiles.length" id="special-tiles" class="mb-16">
+      <PageTitle :text="t('quick_links')" tag="h2" sr-only class="mb-4" />
+      <ul class="grid gap-4 grid-cols-1 sm:grid-cols-2">
+        <li
+          v-for="tile in specialTiles"
+          :key="tile.label"
+          class="btn btn-dark !h-auto p-5 flex items-center gap-4 text-left font-normal"
+        >
+          <YIcon :name="tile.icon" size="2em" aria-hidden="true" />
+          <a :href="tile.url" class="text-lg font-bold">{{ tile.label }}</a>
+        </li>
+      </ul>
+    </section>
 
     <section id="apps" class="my-16">
       <PageTitle :text="t('app_list')" tag="h2" sr-only class="mb-4" />
