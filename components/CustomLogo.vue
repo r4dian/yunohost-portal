@@ -1,6 +1,54 @@
 <script setup lang="ts">
 let customLogo: Settings['portal_logo']
 
+const props = withDefaults(defineProps<{
+  avatarHash?: string | null
+}>(), {
+  avatarHash: null,
+})
+
+const avatarSrc = ref<string | null>(null)
+const avatarFailed = ref(false)
+
+function buildAvatarUrl(hash: string): string | null {
+  const settings = useSettingsState().value
+  const provider = settings?.portal_avatar_provider || 'gravatar'
+
+  switch (provider) {
+    case 'libravatar':
+      return `https://www.libravatar.org/avatar/${hash}?s=100&d=404`
+    case 'custom': {
+      const template = settings?.portal_avatar_custom_url
+      return template ? template.replace(/\{hash\}/g, hash) : null
+    }
+    case 'gravatar':
+    default:
+      return `https://www.gravatar.com/avatar/${hash}?s=100&d=404`
+  }
+}
+
+watch(() => props.avatarHash, (hash) => {
+  if (hash) {
+    const url = buildAvatarUrl(hash)
+    if (url) {
+      avatarSrc.value = url
+      avatarFailed.value = false
+    } else {
+      // No URL to try (e.g. custom provider with no template) — go straight to logo
+      avatarSrc.value = null
+      avatarFailed.value = true
+    }
+  } else {
+    avatarSrc.value = null
+    avatarFailed.value = false
+  }
+}, { immediate: true })
+
+function onAvatarError() {
+  // Any failure — fall through to the existing CustomLogo chain
+  avatarFailed.value = true
+}
+
 try {
   const settings = await useSettings()
   customLogo = settings.value.portal_logo
@@ -10,8 +58,16 @@ try {
 </script>
 
 <template>
+  <img
+    v-if="props.avatarHash && !avatarFailed"
+    :src="avatarSrc"
+    :alt="''"
+    aria-hidden="true"
+    class="gravatar"
+    @error="onAvatarError"
+  />
   <div
-    v-if="customLogo?.is === 'svg'"
+    v-else-if="customLogo?.is === 'svg'"
     aria-hidden="true"
     class="svg-div"
     v-html="customLogo.src"
@@ -72,9 +128,14 @@ try {
 <style scoped>
 svg,
 img,
-.svg-div {
+.svg-div,
+.gravatar {
   max-width: 100px;
   max-height: 100px;
   fill: currentColor;
+}
+
+.gravatar {
+  border-radius: 50%;
 }
 </style>

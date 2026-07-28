@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import md5 from 'blueimp-md5'
 import type { User } from '@/composables/states'
 
 const { t } = useI18n()
@@ -6,6 +7,11 @@ const isLoggedIn = useIsLoggedIn()
 const queryMsg = useQueryMsg()
 const settings = await useSettings()
 const user = await useUser<User | null>()
+
+const avatarHash = computed(() => {
+  if (!settings.value.portal_avatar_enabled || !user.value?.mail) return null
+  return md5(user.value.mail.trim().toLowerCase())
+})
 
 const footerLinks = computed(() => [
   { text: t('footerlink_edit'), to: '/edit' },
@@ -65,7 +71,7 @@ async function logout() {
         <div class="flex flex-row items-center">
           <NuxtLink to="/" class="me-5">
             <span class="sr-only">{{ t('back_to_apps') }}</span>
-            <CustomLogo class="logo" />
+            <CustomLogo class="logo" :avatar-hash="avatarHash" />
           </NuxtLink>
 
           <div

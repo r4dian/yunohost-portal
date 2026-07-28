@@ -99,6 +99,9 @@ export interface Settings {
   show_other_domains_apps: 0 | 1
   portal_user_intro: string
   portal_public_intro: string
+  portal_avatar_enabled?: boolean
+  portal_avatar_provider?: 'libravatar' | 'gravatar' | 'custom'
+  portal_avatar_custom_url?: string
   apps: AppsSettings
 }
 
