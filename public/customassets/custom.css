@@ -1,0 +1,30 @@
+/*
+===============================================================================
+ This file contain extra CSS rules to customize the YunoHost user portal and
+ can be used to customize app tiles, buttons, etc...
+===============================================================================
+*/
+
+/* Make page texts white */
+.user-container h2,
+.user-container small,
+.user-container .user-mail,
+.user-container .user-mail,
+.content .footer a,
+a.app-tile,
+#ynh-logout {
+  color: white !important;
+}
+
+/* Do a little fade-in so you can see the nice wallpaper 1st */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+
+body {
+  color: white !important;
+  text-shadow: 3px 4px 4px rgba(0,0,0,.4), -1px -1px 6px rgba(0,0,0,0.2);
+  animation: fadeIn 5s;
+}
