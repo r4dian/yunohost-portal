@@ -122,16 +122,17 @@ const tileClasses = computed(() => {
 
     <section v-if="specialTiles.length" id="special-tiles" class="mb-16">
       <PageTitle :text="t('quick_links')" tag="h2" sr-only class="mb-4" />
-      <ul class="grid gap-4 grid-cols-1 sm:grid-cols-2">
-        <li
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2">
+        <a
           v-for="tile in specialTiles"
           :key="tile.label"
-          class="btn btn-dark !h-auto p-5 flex items-center gap-4 text-left font-normal"
+          :href="tile.url"
+          class="btn btn-dark !h-auto p-5 flex items-center gap-4 text-left font-normal no-underline"
         >
           <YIcon :name="tile.icon" size="2em" aria-hidden="true" />
-          <a :href="tile.url" class="text-lg font-bold">{{ tile.label }}</a>
-        </li>
-      </ul>
+          <span class="text-lg font-bold">{{ tile.label }}</span>
+        </a>
+      </div>
     </section>
 
     <section id="apps" class="my-16">
