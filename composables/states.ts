@@ -105,7 +105,7 @@ export interface Settings {
   apps: AppsSettings
 }
 
-const useSettingsState = () => useState<Settings>('settings')
+export const useSettingsState = () => useState<Settings>('settings')
 
 export const useSettings = async () => {
   const settings = useSettingsState()
