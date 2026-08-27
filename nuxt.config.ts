@@ -10,6 +10,9 @@ export default defineNuxtConfig({
     buildAssetsDir: '/assets/',
     head: {
       link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/yunohost/sso/icons/favicon.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/yunohost/sso/icons/favicon-32.png' },
+        { rel: 'icon', href: '/yunohost/sso/icons/favicon.ico', sizes: 'any' },
         { rel: 'stylesheet', href: '/yunohost/sso/customassets/custom.css' },
         { rel: 'manifest', href: '/yunohost/sso/site.webmanifest' },
         { rel: 'apple-touch-icon', href: '/yunohost/sso/icons/apple-touch-icon.png' },
@@ -82,9 +85,9 @@ if (socialurl) {
     manifestFilename: 'site.webmanifest',
     registerType: 'autoUpdate',
     manifest: {
-      name: 'YunoHost Portal',
-      short_name: 'Portal',
-      description: 'YunoHost application portal',
+      name: 'Megaroad',
+      short_name: 'Megaroad',
+      description: 'Megaroad application portal',
       theme_color: '#1c1e21',
       background_color: '#1c1e21',
       display: 'standalone',
